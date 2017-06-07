@@ -1,1 +1,60 @@
 apply plugin: 'scala'
+apply plugin: 'idea'
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/scala']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['test/scala']
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.1',
+    'io.spray:spray-can:1.1-M8',
+    'io.spray:spray-http:1.1-M8',
+    'io.spray:spray-routing:1.1-M8',
+    'com.typesafe.akka:akka-actor:2.0.5',
+    'com.typesafe.akka:akka-slf4j:2.0.5',
+    'com.typesafe.slick:slick:1.0.1',
+    'mysql:mysql-connector-java:5.1.25',
+    'net.liftweb:lift-json:2.5.1',
+    'ch.qos.logback:logback-classic:1.0.13',
+     'com.typesafe.slick:slick_2.10:1.0.0-RC2'
+
+    testCompile 'org.scala-lang:scala-library:2.11.1'
+}
+
+dependencies {
+    zinc 'com.typesafe.zinc:zinc:0.3.9'
+}
+
+configurations.all {
+    resolutionStrategy.force 'org.scala-lang:scala-library:2.11.7'
+}
+
+configurations.zinc {
+    resolutionStrategy.force 'org.scala-lang:scala-library:2.10.5'
+}
+
+tasks.withType(ScalaCompile) {
+    configure(scalaCompileOptions.forkOptions) {
+        memoryMaximumSize = '1g'
+        jvmArgs = ['-XX:MaxPermSize=512m']
+    }
+}
+
+idea {
+    targetVersion = "14"
+}
+
+idea { module { inheritOutputDirs = true } }
